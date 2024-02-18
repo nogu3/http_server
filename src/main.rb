@@ -5,18 +5,18 @@ server = TCPServer.new 8080
 loop do
   client = server.accept
 
-  headers = {}
-  header = ""
-  while data = client.read(1)
-    header += data
-    break if header == "\r\n"
 
-    if header.end_with?("\r\n")
-      header = header.delete("\r\n")
-      header_name, value = header.split(" ", 2)
-      headers[header_name.delete(":")] = value
-      header = ""
-    end
+  request_line = client.gets()
+  method, uri ,http_version = request_line.split(" ")
+  p method
+  p uri
+  p http_version
+
+  headers = {}
+  while header = client.gets().chomp
+    break if header == ""
+    header_name, value = header.split(": ")
+    headers[header_name] = value
   end
 
   p headers
